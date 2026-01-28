@@ -1,9 +1,16 @@
+# Skip migrations during build - run only at deploy time
+[phases.setup]
+nixPkgs = ["php82", "php82Extensions.pdo_pgsql", "php82Packages.composer", "nodejs_18", "npm-9_x"]
+
+[phases.install]
+cmds = ["composer install --ignore-platform-reqs", "npm i"]
+
 [phases.build]
 cmds = [
     "composer install --no-dev --optimize-autoloader",
-    "php artisan config:cache",
-    "php artisan route:cache", 
-    "php artisan view:cache"
+    "php artisan config:clear",
+    "php artisan route:clear", 
+    "php artisan view:clear"
 ]
 
 [start]
