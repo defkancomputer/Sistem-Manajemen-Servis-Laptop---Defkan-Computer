@@ -15,12 +15,15 @@ class DatabaseSeeder extends Seeder
         // Create admin user
         $this->call(UserSeeder::class);
         
-        // Create default settings
-        Pengaturan::create([
-            'nama_toko' => 'Defkan Computer',
-            'alamat' => 'Jl. Gubernur Sewaka No.102, Sambongjaya, Kec. Mangkubumi, Tasikmalaya, Jawa Barat 46181 (Depan RM Saung Jembar samping Indomaret/SPX)',
-            'no_kontak' => '08123456789',
-            'ketentuan_servis' => "1. Barang yang tidak diambil dalam 3 bulan bukan tanggung jawab kami.\n2. Kerusakan akibat kesalahan pengguna tidak termasuk garansi.\n3. Service akan dilanjutkan setelah panjar minimal 50% dari total biaya.\n4. Garansi tidak berlaku jika segel rusak atau dibongkar pihak lain.",
-        ]);
+        // Create default settings (use firstOrCreate to avoid duplicate)
+        Pengaturan::firstOrCreate(
+            ['id' => 1],
+            [
+                'nama_toko' => 'Defkan Computer',
+                'alamat' => 'Jl. Gubernur Sewaka No.102, Sambongjaya, Kec. Mangkubumi, Tasikmalaya, Jawa Barat 46181 (Depan RM Saung Jembar samping Indomaret/SPX)',
+                'no_kontak' => '08123456789',
+                'ketentuan_servis' => "1. Barang yang tidak diambil dalam 3 bulan bukan tanggung jawab kami.\n2. Kerusakan akibat kesalahan pengguna tidak termasuk garansi.\n3. Service akan dilanjutkan setelah panjar minimal 50% dari total biaya.\n4. Garansi tidak berlaku jika segel rusak atau dibongkar pihak lain.",
+            ]
+        );
     }
 }

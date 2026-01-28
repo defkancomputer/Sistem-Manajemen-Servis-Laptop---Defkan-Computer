@@ -12,10 +12,12 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\User::create([
-            'username' => 'admin',
-            'password' => \Illuminate\Support\Facades\Hash::make('password123'),
-            'role' => 'admin',
-        ]);
+        \App\Models\User::firstOrCreate(
+            ['username' => 'admin'],
+            [
+                'password' => \Illuminate\Support\Facades\Hash::make('password123'),
+                'role' => 'admin',
+            ]
+        );
     }
 }
