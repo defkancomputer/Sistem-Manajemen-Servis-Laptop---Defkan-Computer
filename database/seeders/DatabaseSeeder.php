@@ -12,6 +12,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Create admin user
+        $this->call(UserSeeder::class);
+        
         // Create default settings
         Pengaturan::create([
             'nama_toko' => 'Defkan Computer',
