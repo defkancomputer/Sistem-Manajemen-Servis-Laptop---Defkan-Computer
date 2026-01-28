@@ -1,17 +1,12 @@
-# Skip migrations during build - run only at deploy time
+# Railway Nixpacks Configuration for Laravel
 [phases.setup]
 nixPkgs = ["php82", "php82Extensions.pdo_pgsql", "php82Packages.composer", "nodejs_18", "npm-9_x"]
 
 [phases.install]
-cmds = ["composer install --ignore-platform-reqs", "npm i"]
+cmds = ["composer install --ignore-platform-reqs && npm install"]
 
 [phases.build]
-cmds = [
-    "composer install --no-dev --optimize-autoloader",
-    "php artisan config:clear",
-    "php artisan route:clear", 
-    "php artisan view:clear"
-]
+cmds = ["composer install --no-dev --optimize-autoloader && php artisan view:clear"]
 
 [start]
-cmd = "php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT:-8080}"
+cmd = "php artisan config:clear && php artisan route:clear && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT:-8080}"
