@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: defkan-servis
+    runtime: php
+    region: singapore
+    plan: free
+    buildCommand: |
+      composer install --no-dev --optimize-autoloader
+      php artisan config:cache
+      php artisan route:cache
+      php artisan view:cache
+      php artisan migrate --force
+    startCommand: php artisan serve --host=0.0.0.0 --port=$PORT
+    envVars:
+      - key: APP_KEY
+        generateValue: true
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DATABASE_URL
+        fromDatabase:
+          name: defkan-db
+          property: connectionString
+
+databases:
+  - name: defkan-db
+    databaseName: defkan_servis
+    plan: free
+    region: singapore
