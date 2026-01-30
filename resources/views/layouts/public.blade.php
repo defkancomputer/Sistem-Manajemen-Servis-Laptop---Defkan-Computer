@@ -109,7 +109,7 @@
         <div class="container">
             <div class="d-flex justify-content-between align-items-center">
                 <a href="{{ route('home') }}" class="brand text-decoration-none text-white">
-                    <img src="{{ asset('images/logo.jpg') }}" alt="Logo">
+                    <img src="{{ asset('images/logo.png') }}" alt="Logo">
                     <span class="brand-name">{{ $pengaturan->nama_toko ?? 'Defkan Computer' }}</span>
                 </a>
                 

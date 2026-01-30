@@ -161,7 +161,7 @@
     <div class="login-container">
         <div class="login-card">
             <div class="logo-container">
-                <img src="{{ asset('images/logo.jpg') }}" alt="Defkan Computer Logo">
+                <img src="{{ asset('images/logo.png') }}" alt="Defkan Computer Logo">
                 <p class="brand-name">Defkan Computer</p>
             </div>
             

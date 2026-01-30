@@ -26,7 +26,7 @@
     <!-- Sidebar Desktop -->
     <div class="sidebar d-none d-lg-flex">
         <div class="sidebar-header">
-            <img src="{{ asset('images/logo.jpg') }}" alt="Logo Defkan">
+            <img src="{{ asset('images/logo.png') }}" alt="Logo Defkan">
             <h1>Defkan Computer</h1>
         </div>
         

@@ -248,7 +248,7 @@
     <table style="margin-bottom: 8px;">
         <tr>
             <td style="width: 10%; vertical-align: middle;">
-                <img src="{{ asset('images/logo.jpg') }}" style="width: 45px; height: 45px;">
+                <img src="{{ asset('images/logo.png') }}" style="width: 45px; height: 45px;">
             </td>
             <td style="width: 55%; vertical-align: middle;">
                 <div class="brand-name">{{ strtoupper($pengaturan->nama_toko ?? 'DEFKAN COMPUTER') }}</div>

@@ -62,14 +62,26 @@
         }
         
         .brand img {
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             border-radius: 8px;
+            object-fit: contain;
+            background: white;
         }
         
         .brand-name {
-            font-weight: 700;
-            font-size: 1.1rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        
+        @media (min-width: 768px) {
+            .brand img {
+                width: 40px;
+                height: 40px;
+            }
+            .brand-name {
+                font-size: 1.05rem;
+            }
         }
         
         .user-nav {
@@ -80,9 +92,9 @@
         .user-nav a {
             color: rgba(255,255,255,0.8);
             text-decoration: none;
-            padding: 0.5rem 1rem;
+            padding: 0.5rem 0.75rem;
             border-radius: 6px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 500;
             transition: all 0.2s;
         }
@@ -199,7 +211,7 @@
     <header class="user-header">
         <div class="container position-relative">
             <a href="{{ route('home') }}" class="brand">
-                <img src="{{ asset('images/logo.jpg') }}" alt="Logo">
+                <img src="{{ asset('images/logo.png') }}" alt="Logo">
                 <span class="brand-name">{{ $pengaturan->nama_toko ?? 'Defkan Computer' }}</span>
             </a>
             
