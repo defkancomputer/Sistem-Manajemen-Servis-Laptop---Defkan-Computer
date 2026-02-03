@@ -10,12 +10,66 @@
         <p class="page-subtitle">Informasi lengkap nomor servis <span class="fw-semibold text-primary">{{ $servis->nomor_servis }}</span></p>
     </div>
     <div class="mt-3 mt-md-0 d-flex gap-2 flex-wrap">
-        @if($servis->status->value === 'Selesai')
-            <a href="https://wa.me/{{ preg_replace('/^0/', '62', $servis->no_hp) }}?text=Halo {{ $servis->nama_konsumen }}, laptop Anda ({{ $servis->type_laptop }}) dengan nomor servis *{{ $servis->nomor_servis }}* sudah *SELESAI* diperbaiki dan siap diambil di {{ $pengaturan->nama_toko ?? 'Defkan Computer' }}. Terima kasih." 
-               class="btn btn-success" target="_blank">
+        @php
+            $waNumber = preg_replace('/^0/', '62', $servis->no_hp);
+            $namaToko = $pengaturan->nama_toko ?? 'Defkan Computer';
+            
+            // Template messages for each status
+            $waTemplates = [
+                'dicek' => "Halo *{$servis->nama_konsumen}*,%0A%0ALaptop Anda (*{$servis->type_laptop}*) dengan nomor servis *{$servis->nomor_servis}* sedang kami *CEK/DIAGNOSA*.%0A%0AKami akan segera mengabarkan hasil pengecekan dan estimasi biaya perbaikan.%0A%0ATerima kasih telah mempercayakan servis Anda kepada *{$namaToko}*.",
+                
+                'proses' => "Halo *{$servis->nama_konsumen}*,%0A%0ALaptop Anda (*{$servis->type_laptop}*) dengan nomor servis *{$servis->nomor_servis}* sedang dalam *PROSES PENGERJAAN*.%0A%0AKami akan segera mengabarkan jika sudah selesai.%0A%0ATerima kasih atas kesabarannya.%0A*{$namaToko}*",
+                
+                'selesai' => "Halo *{$servis->nama_konsumen}*,%0A%0ALaptop Anda (*{$servis->type_laptop}*) dengan nomor servis *{$servis->nomor_servis}* sudah *SELESAI* diperbaiki dan siap diambil.%0A%0A💰 Total Biaya: *{$servis->formatRupiah($servis->total_biaya)}*%0A💵 DP Dibayar: *{$servis->formatRupiah($servis->panjar)}*%0A📌 Sisa Bayar: *{$servis->formatRupiah($servis->total_biaya - $servis->panjar)}*%0A%0ASilakan datang ke *{$namaToko}* untuk mengambil laptop Anda.%0A%0ATerima kasih telah mempercayakan servis Anda kepada kami! 🙏"
+            ];
+        @endphp
+        
+        {{-- WhatsApp Notification Dropdown --}}
+        <div class="dropdown">
+            <button class="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="fa-brands fa-whatsapp"></i> Kirim Notifikasi WA
-            </a>
-        @endif
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                    <h6 class="dropdown-header">
+                        <i class="fa-solid fa-message me-1"></i> Pilih Template Pesan
+                    </h6>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                    <a class="dropdown-item {{ $servis->status->value === 'Dicek' ? 'active' : '' }}" 
+                       href="https://wa.me/{{ $waNumber }}?text={{ $waTemplates['dicek'] }}" target="_blank">
+                        <i class="fa-solid fa-magnifying-glass text-info me-2"></i>
+                        <strong>Sedang Dicek</strong>
+                        <br><small class="text-muted ms-4">Laptop sedang didiagnosa</small>
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item {{ $servis->status->value === 'Proses' ? 'active' : '' }}" 
+                       href="https://wa.me/{{ $waNumber }}?text={{ $waTemplates['proses'] }}" target="_blank">
+                        <i class="fa-solid fa-screwdriver-wrench text-warning me-2"></i>
+                        <strong>Sedang Diproses</strong>
+                        <br><small class="text-muted ms-4">Laptop sedang dikerjakan</small>
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item {{ $servis->status->value === 'Selesai' ? 'active' : '' }}" 
+                       href="https://wa.me/{{ $waNumber }}?text={{ $waTemplates['selesai'] }}" target="_blank">
+                        <i class="fa-solid fa-circle-check text-success me-2"></i>
+                        <strong>Sudah Selesai</strong>
+                        <br><small class="text-muted ms-4">Laptop siap diambil</small>
+                    </a>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                    <a class="dropdown-item" href="https://wa.me/{{ $waNumber }}" target="_blank">
+                        <i class="fa-solid fa-pen-to-square text-secondary me-2"></i>
+                        Chat Langsung (Kosong)
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
         <a href="{{ route('servis.print', $servis->id) }}" class="btn btn-primary" target="_blank">
             <i class="fa-solid fa-print"></i> Cetak Nota
         </a>

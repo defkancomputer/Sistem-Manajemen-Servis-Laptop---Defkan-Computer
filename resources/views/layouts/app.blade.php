@@ -48,6 +48,9 @@
             <a href="{{ route('laporan') }}" class="nav-link {{ request()->routeIs('laporan') ? 'active' : '' }}">
                 <i class="fa-solid fa-chart-line"></i> Laporan
             </a>
+            <a href="{{ route('tracking.logs') }}" class="nav-link {{ request()->routeIs('tracking.logs') ? 'active' : '' }}">
+                <i class="fa-solid fa-clock-rotate-left"></i> Log Tracking
+            </a>
             <a href="{{ route('pengaturan') }}" class="nav-link {{ request()->routeIs('pengaturan') ? 'active' : '' }}">
                 <i class="fa-solid fa-gear"></i> Pengaturan
             </a>
@@ -76,6 +79,7 @@
             <a href="{{ route('servis.create') }}"><i class="fa-solid fa-plus me-2"></i>Input Servis</a>
             <a href="{{ route('servis.index') }}"><i class="fa-solid fa-laptop-medical me-2"></i>Data Servis</a>
             <a href="{{ route('laporan') }}"><i class="fa-solid fa-chart-line me-2"></i>Laporan</a>
+            <a href="{{ route('tracking.logs') }}"><i class="fa-solid fa-clock-rotate-left me-2"></i>Log Tracking</a>
             <a href="{{ route('pengaturan') }}"><i class="fa-solid fa-gear me-2"></i>Pengaturan</a>
             <form action="{{ route('logout') }}" method="POST" class="mt-3">
                 @csrf

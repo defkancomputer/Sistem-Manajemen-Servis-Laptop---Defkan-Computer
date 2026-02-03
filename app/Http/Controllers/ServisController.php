@@ -67,7 +67,8 @@ class ServisController extends Controller
     public function show(string $id)
     {
         $servis = Servis::findOrFail($id);
-        return view('servis.show', compact('servis'));
+        $pengaturan = Pengaturan::getSettings();
+        return view('servis.show', compact('servis', 'pengaturan'));
     }
 
     /**
@@ -76,7 +77,8 @@ class ServisController extends Controller
     public function edit(string $id)
     {
         $servis = Servis::findOrFail($id);
-        return view('servis.edit', compact('servis'));
+        $pengaturan = Pengaturan::getSettings();
+        return view('servis.edit', compact('servis', 'pengaturan'));
     }
 
     /**

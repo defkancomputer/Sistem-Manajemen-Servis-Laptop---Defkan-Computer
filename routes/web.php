@@ -52,4 +52,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     // Pengaturan
     Route::get('pengaturan', [PengaturanController::class, 'index'])->name('pengaturan');
     Route::post('pengaturan', [PengaturanController::class, 'update'])->name('pengaturan.update');
+
+    // Tracking Logs
+    Route::get('tracking-logs', [TrackingController::class, 'logs'])->name('tracking.logs');
 });

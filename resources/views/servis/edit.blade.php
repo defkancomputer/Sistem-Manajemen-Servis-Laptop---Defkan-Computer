@@ -153,7 +153,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Status Saat Ini <span class="text-danger">*</span></label>
-                        <select name="status" class="form-select" required>
+                        <select name="status" class="form-select" required id="statusSelect">
                             @foreach(\App\Enums\ServisStatus::cases() as $status)
                                 <option value="{{ $status->value }}" {{ old('status', $servis->status->value) == $status->value ? 'selected' : '' }}>
                                     {{ $status->label() }}
@@ -164,6 +164,59 @@
                     <div>
                         <label class="form-label">Catatan Teknisi</label>
                         <textarea name="catatan_teknisi" class="form-control" rows="2">{{ old('catatan_teknisi', $servis->catatan_teknisi) }}</textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- WhatsApp Notification Card -->
+            <div class="card mb-4 border-success" id="waNotifCard">
+                <div class="card-header bg-success text-white">
+                    <i class="fa-brands fa-whatsapp me-2"></i>
+                    Kabari Konsumen via WhatsApp
+                </div>
+                <div class="card-body">
+                    @php
+                        $waNumber = preg_replace('/^0/', '62', $servis->no_hp);
+                        $namaToko = $pengaturan->nama_toko ?? 'Defkan Computer';
+                    @endphp
+                    
+                    <p class="text-muted small mb-3">
+                        <i class="fa-solid fa-info-circle me-1"></i>
+                        Kirim notifikasi ke konsumen tentang progress servisnya
+                    </p>
+                    
+                    <!-- Status: Dicek -->
+                    <div class="wa-template-group mb-2" id="waTemplateDicek" style="{{ $servis->status->value === 'Dicek' ? '' : 'display:none;' }}">
+                        <a href="https://wa.me/{{ $waNumber }}?text=Halo *{{ $servis->nama_konsumen }}*,%0A%0ALaptop Anda (*{{ $servis->type_laptop }}*) dengan nomor servis *{{ $servis->nomor_servis }}* sedang kami *CEK/DIAGNOSA*.%0A%0AKami akan segera mengabarkan hasil pengecekan dan estimasi biaya perbaikan.%0A%0ATerima kasih telah mempercayakan servis Anda kepada *{{ $namaToko }}*." 
+                           class="btn btn-success w-100" target="_blank">
+                            <i class="fa-brands fa-whatsapp me-2"></i> Kirim: Sedang Dicek
+                        </a>
+                    </div>
+                    
+                    <!-- Status: Proses -->
+                    <div class="wa-template-group mb-2" id="waTemplateProses" style="{{ $servis->status->value === 'Proses' ? '' : 'display:none;' }}">
+                        <a href="https://wa.me/{{ $waNumber }}?text=Halo *{{ $servis->nama_konsumen }}*,%0A%0ALaptop Anda (*{{ $servis->type_laptop }}*) dengan nomor servis *{{ $servis->nomor_servis }}* sedang dalam *PROSES PENGERJAAN*.%0A%0AKami akan segera mengabarkan jika sudah selesai.%0A%0ATerima kasih atas kesabarannya.%0A*{{ $namaToko }}*" 
+                           class="btn btn-success w-100" target="_blank">
+                            <i class="fa-brands fa-whatsapp me-2"></i> Kirim: Sedang Diproses
+                        </a>
+                    </div>
+                    
+                    <!-- Status: Selesai -->
+                    <div class="wa-template-group mb-2" id="waTemplateSelesai" style="{{ $servis->status->value === 'Selesai' ? '' : 'display:none;' }}">
+                        <a href="https://wa.me/{{ $waNumber }}?text=Halo *{{ $servis->nama_konsumen }}*,%0A%0ALaptop Anda (*{{ $servis->type_laptop }}*) dengan nomor servis *{{ $servis->nomor_servis }}* sudah *SELESAI* diperbaiki dan siap diambil.%0A%0A💰 Total Biaya: *{{ $servis->formatRupiah($servis->total_biaya) }}*%0A💵 DP Dibayar: *{{ $servis->formatRupiah($servis->panjar) }}*%0A📌 Sisa Bayar: *{{ $servis->formatRupiah($servis->total_biaya - $servis->panjar) }}*%0A%0ASilakan datang ke *{{ $namaToko }}* untuk mengambil laptop Anda.%0A%0ATerima kasih telah mempercayakan servis Anda kepada kami! 🙏" 
+                           class="btn btn-success w-100" target="_blank">
+                            <i class="fa-brands fa-whatsapp me-2"></i> Kirim: Sudah Selesai
+                        </a>
+                    </div>
+                    
+                    <!-- Default: No template for Masuk/Diambil -->
+                    <div class="wa-template-group" id="waTemplateDefault" style="{{ in_array($servis->status->value, ['Masuk', 'Diambil']) ? '' : 'display:none;' }}">
+                        <a href="https://wa.me/{{ $waNumber }}" class="btn btn-outline-success w-100" target="_blank">
+                            <i class="fa-brands fa-whatsapp me-2"></i> Chat Langsung
+                        </a>
+                        <small class="text-muted d-block text-center mt-2">
+                            Status ini tidak memiliki template otomatis
+                        </small>
                     </div>
                 </div>
             </div>
@@ -265,5 +318,29 @@ document.querySelectorAll('.datepicker').forEach(function(input) {
         this.value = formatted;
     });
 });
+
+// Toggle WhatsApp template based on status selection
+const statusSelect = document.getElementById('statusSelect');
+if (statusSelect) {
+    statusSelect.addEventListener('change', function() {
+        const status = this.value;
+        
+        // Hide all template groups
+        document.querySelectorAll('.wa-template-group').forEach(function(el) {
+            el.style.display = 'none';
+        });
+        
+        // Show the corresponding template
+        if (status === 'Dicek') {
+            document.getElementById('waTemplateDicek').style.display = 'block';
+        } else if (status === 'Proses') {
+            document.getElementById('waTemplateProses').style.display = 'block';
+        } else if (status === 'Selesai') {
+            document.getElementById('waTemplateSelesai').style.display = 'block';
+        } else {
+            document.getElementById('waTemplateDefault').style.display = 'block';
+        }
+    });
+}
 </script>
 @endsection
